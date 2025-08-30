@@ -1,0 +1,19 @@
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h3>Navigation</h3>
+    <button class="close-btn" (click)="toggleSidebar()">
+      <span>&times;</span>
+    </button>
+  </div>
+  
+  <nav class="sidebar-nav">
+    <ul>
+      <li *ngFor="let item of menuItems">
+        <a [routerLink]="item.route" routerLinkActive="active">
+          <i class="material-icons">{{ item.icon }}</i>
+          <span>{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

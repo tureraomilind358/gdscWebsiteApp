@@ -1,0 +1,7 @@
+.process { padding: 2rem 1rem; }
+.steps { list-style:none; padding:0; margin:0; display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1rem; }
+.step { background:#fff; border-radius: 12px; box-shadow:0 4px 16px rgba(0,0,0,0.06); padding: 1.5rem; text-align:center; }
+.icon { font-size:2rem; margin-bottom:0.5rem; }
+.step h3 { color:#1E88E5; margin:0.25rem 0; font-family:'Poppins', sans-serif; }
+.step p { margin:0; color:#555; }
+@media (max-width: 992px){ .steps { grid-template-columns: 1fr; } }

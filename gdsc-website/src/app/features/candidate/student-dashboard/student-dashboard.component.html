@@ -1,0 +1,158 @@
+<div class="gdsc-dashboard">
+  <!-- Sidebar Navigation -->
+  <div class="dashboard-sidebar">
+    <div class="sidebar-header">
+      <div class="logo-container">
+        <img src="assets/images/gdsc-logo.svg" alt="GDSC Logo" class="sidebar-logo" />
+        <div class="brand-text">
+          <span class="brand-name">GDSC</span>
+          <span class="brand-subtitle">Student Portal</span>
+        </div>
+      </div>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <h4 class="nav-section-title">Registration</h4>
+        <a routerLink="/student/dashboard" routerLinkActive="active" class="nav-item">
+          <i class="fas fa-tachometer-alt"></i>
+          Dashboard
+        </a>
+        <a routerLink="/student/profile" class="nav-item">
+          <i class="fas fa-user"></i>
+          Profile
+        </a>
+      </div>
+      
+      <div class="nav-section">
+        <h4 class="nav-section-title">Confirmation</h4>
+        <a routerLink="/student/enrolments" class="nav-item">
+          <i class="fas fa-book"></i>
+          My Enrolments
+        </a>
+        <a routerLink="/student/certificates" class="nav-item">
+          <i class="fas fa-certificate"></i>
+          Certificates
+        </a>
+      </div>
+      
+      <div class="nav-section">
+        <h4 class="nav-section-title">Exam</h4>
+        <a routerLink="/student/exams" class="nav-item">
+          <i class="fas fa-clipboard-list"></i>
+          Available Exams
+        </a>
+        <a routerLink="/student/results" class="nav-item">
+          <i class="fas fa-chart-line"></i>
+          Results
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="dashboard-main">
+    <!-- Top Stats Cards -->
+    <div class="stats-section">
+      <div class="stats-card balance-card">
+        <div class="card-icon">
+          <i class="fas fa-wallet"></i>
+        </div>
+        <div class="card-content">
+          <h3>{{ stats.totalEnrolments }}</h3>
+          <p>Your GDSC Learning Balance</p>
+        </div>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stats-card">
+          <div class="card-header">
+            <h4>Total Admissions: {{ stats.totalEnrolments }}</h4>
+          </div>
+          <div class="admission-stats">
+            <div class="stat-item">
+              <span class="stat-label">MS-CIT</span>
+              <span class="stat-value">{{ stats.completedExams }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">KLIC (120 Hrs)</span>
+              <span class="stat-value">{{ stats.pendingExams }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Course Enrollment Overview Chart -->
+    <div class="chart-section">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>Course Enrollment Overview 2025</h3>
+          <div class="chart-legend">
+            <span class="legend-item ms-cit">MS-CIT</span>
+            <span class="legend-item klic">KLIC Advanced Excel</span>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="enrollmentChart" width="400" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Additional Stats Cards -->
+    <div class="secondary-stats">
+      <div class="stat-card yellow">
+        <div class="stat-number">{{ stats.pendingExams }}</div>
+        <div class="stat-label">2nd Installment Payment Pending</div>
+      </div>
+      
+      <div class="stat-card blue">
+        <div class="stat-number">{{ stats.completedExams }}</div>
+        <div class="stat-label">Unconfirmed Learners</div>
+      </div>
+      
+      <div class="stat-card pink">
+        <div class="stat-number">{{ stats.certificatesPending }}</div>
+        <div class="stat-label">MS-CIT Rejected Learners</div>
+      </div>
+      
+      <div class="stat-card orange">
+        <div class="stat-number">0</div>
+        <div class="stat-label">KLIC Rejected Learners</div>
+      </div>
+    </div>
+
+    
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <div class="content-header">
+        <h2>Add New Admission</h2>
+        <p>1. Add New Admission by opening <strong>Registration</strong> menu from left side navigation drawer.</p>
+        <p>2. Select <strong>Add New</strong> and start doing new admission.</p>
+      </div>
+      
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="fas fa-user-plus"></i>
+        </div>
+        <p>Ready to start your learning journey? Enroll in available courses.</p>
+        <button class="btn btn-primary" (click)="navigateToSection('courses')">
+          Browse Courses
+        </button>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="dashboard-footer">
+      <div class="footer-content">
+        <p>&copy; Copyright 2025 <a href="#">Global Digital Skills Corporation Ltd</a>. All Rights Reserved.</p>
+        <div class="footer-info">
+          <span class="info-item">MFO MMRDA</span>
+          <span class="timestamp">{{ getCurrentDateTime() }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

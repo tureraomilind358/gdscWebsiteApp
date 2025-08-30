@@ -1,0 +1,160 @@
+<div class="register-container centered">
+  <div class="register-card pro">
+    <div class="register-header">
+      <div class="logo-section">
+        <img src="assets/logo.png" alt="GDSC Logo" class="logo">
+        <h1>Institute Registration</h1>
+        <p>Create your institute account to manage students and exams.</p>
+      </div>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <div class="form-group">
+        <label for="instituteName">Institute Name</label>
+        <div class="input-wrapper">
+          <i class="fas fa-university input-icon"></i>
+          <input
+            type="text"
+            id="instituteName"
+            formControlName="instituteName"
+            placeholder="Enter institute name"
+            [class.error]="registerForm.get('instituteName')?.invalid && registerForm.get('instituteName')?.touched"
+          >
+        </div>
+        <div class="error-message" *ngIf="registerForm.get('instituteName')?.invalid && registerForm.get('instituteName')?.touched">
+          {{ getErrorMessage('instituteName') }}
+        </div>
+      </div>
+
+      <div class="form-row two-col">
+        <div class="form-group">
+          <label for="ownerName">Owner Name</label>
+          <div class="input-wrapper">
+            <i class="fas fa-user input-icon"></i>
+            <input
+              type="text"
+              id="ownerName"
+              formControlName="ownerName"
+              placeholder="Enter owner name"
+              [class.error]="registerForm.get('ownerName')?.invalid && registerForm.get('ownerName')?.touched"
+            >
+          </div>
+          <div class="error-message" *ngIf="registerForm.get('ownerName')?.invalid && registerForm.get('ownerName')?.touched">
+            {{ getErrorMessage('ownerName') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="mobile">Mobile Number</label>
+          <div class="input-wrapper">
+            <i class="fas fa-phone input-icon"></i>
+            <input
+              type="tel"
+              id="mobile"
+              formControlName="mobile"
+              placeholder="Enter 10-digit mobile number"
+              [class.error]="registerForm.get('mobile')?.invalid && registerForm.get('mobile')?.touched"
+            >
+          </div>
+          <div class="error-message" *ngIf="registerForm.get('mobile')?.invalid && registerForm.get('mobile')?.touched">
+            {{ getErrorMessage('mobile') }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Institute Email</label>
+        <div class="input-wrapper">
+          <i class="fas fa-envelope input-icon"></i>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            placeholder="Enter official institute email"
+            [class.error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+          >
+        </div>
+        <div class="error-message" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+          {{ getErrorMessage('email') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="district">District (Mumbai)</label>
+        <div class="input-wrapper">
+          <i class="fas fa-location-dot input-icon"></i>
+          <select id="district" formControlName="district">
+            <option value="" disabled selected>Select district</option>
+            <option *ngFor="let d of mumbaiDistricts" [value]="d">{{ d }}</option>
+          </select>
+        </div>
+        <div class="error-message" *ngIf="registerForm.get('district')?.invalid && registerForm.get('district')?.touched">
+          {{ getErrorMessage('district') }}
+        </div>
+      </div>
+
+      <div class="form-row two-col">
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock input-icon"></i>
+            <input
+              type="password"
+              id="password"
+              formControlName="password"
+              placeholder="Create password"
+              [class.error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+            >
+          </div>
+          <div class="error-message" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+            {{ getErrorMessage('password') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock input-icon"></i>
+            <input
+              type="password"
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              placeholder="Confirm password"
+              [class.error]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched"
+            >
+          </div>
+          <div class="error-message" *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
+            {{ getErrorMessage('confirmPassword') }}
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="form-group">
+        <label class="checkbox-wrapper">
+          <input type="checkbox" formControlName="agreeToTerms">
+          <span class="checkmark"></span>
+          I agree to the <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="terms-link">Privacy Policy</a>
+        </label>
+        <div class="error-message" *ngIf="registerForm.get('agreeToTerms')?.invalid && registerForm.get('agreeToTerms')?.touched">
+          You must agree to the terms and conditions
+        </div>
+      </div>
+
+      <div class="error-alert" *ngIf="errorMessage">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="register-btn" [disabled]="registerForm.invalid || isLoading">
+        <span *ngIf="!isLoading">Create Account</span>
+        <div class="spinner" *ngIf="isLoading"></div>
+      </button>
+
+      <div class="login-link">
+        Already have an account? <a routerLink="/login">Sign in</a>
+      </div>
+    </form>
+  </div>
+</div>

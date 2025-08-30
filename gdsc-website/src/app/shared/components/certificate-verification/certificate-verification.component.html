@@ -1,0 +1,83 @@
+<div class="certificate-verification">
+  <div class="verification-container">
+    <div class="verification-header">
+      <h2>Certificate Verification</h2>
+      <p>Enter your certificate details to verify authenticity</p>
+    </div>
+
+    <form [formGroup]="verificationForm" (ngSubmit)="onSubmit()" class="verification-form">
+      <div class="form-group">
+        <label for="certificateId">Certificate ID</label>
+        <input
+          type="text"
+          id="certificateId"
+          formControlName="certificateId"
+          placeholder="Enter certificate ID"
+          [class.error]="verificationForm.get('certificateId')?.invalid && verificationForm.get('certificateId')?.touched"
+        >
+        <div class="error-message" *ngIf="verificationForm.get('certificateId')?.invalid && verificationForm.get('certificateId')?.touched">
+          {{ getErrorMessage('certificateId') }}
+        </div>
+      </div>
+
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="verificationForm.invalid || isLoading">
+          <i class="fas fa-search" *ngIf="!isLoading"></i>
+          <i class="fas fa-spinner fa-spin" *ngIf="isLoading"></i>
+          {{ isLoading ? 'Verifying...' : 'Verify Certificate' }}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="reset()">
+          <i class="fas fa-redo"></i>
+          Reset
+        </button>
+      </div>
+    </form>
+
+    <div class="error-alert" *ngIf="errorMessage">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ errorMessage }}
+    </div>
+
+    <div class="verification-result" *ngIf="verificationResult">
+      <div class="result-header">
+        <i class="fas fa-certificate"></i>
+        <h3>Certificate Verified Successfully</h3>
+      </div>
+      
+      <div class="certificate-details">
+        <div class="detail-row">
+          <span class="label">Student Name:</span>
+          <span class="value">{{ verificationResult.studentName }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Course:</span>
+          <span class="value">{{ verificationResult.courseName }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Issue Date:</span>
+          <span class="value">{{ verificationResult.issueDate | date:'mediumDate' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Certificate ID:</span>
+          <span class="value">{{ verificationResult.certificateId }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Grade:</span>
+          <span class="value grade">{{ verificationResult.grade }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Status:</span>
+          <span class="value status" [class]="verificationResult.status.toLowerCase()">
+            {{ verificationResult.status }}
+          </span>
+        </div>
+      </div>
+
+      <div class="verification-badge">
+        <i class="fas fa-shield-alt"></i>
+        <span>Verified by GDSC</span>
+      </div>
+    </div>
+  </div>
+</div>

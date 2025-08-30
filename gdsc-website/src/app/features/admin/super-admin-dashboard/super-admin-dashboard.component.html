@@ -1,0 +1,175 @@
+<div class="super-admin-dashboard">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="welcome-section">
+        <h1>Super Admin Dashboard</h1>
+        <p>Welcome back, {{ currentUser?.firstName }} {{ currentUser?.lastName }}</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-outline" (click)="loadDashboardData()">
+          <i class="fas fa-sync-alt"></i> Refresh
+        </button>
+        <button class="btn btn-danger" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon centres">
+        <i class="fas fa-building"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.totalCentres }}</h3>
+        <p>Total Centres</p>
+        <small>{{ stats.approvedCentres }} approved, {{ stats.pendingCentres }} pending</small>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon students">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.totalStudents }}</h3>
+        <p>Total Students</p>
+        <small>Across all centres</small>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon courses">
+        <i class="fas fa-book"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.totalCourses }}</h3>
+        <p>Active Courses</p>
+        <small>Available for certification</small>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon certificates">
+        <i class="fas fa-certificate"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.totalCertificates }}</h3>
+        <p>Certificates Issued</p>
+        <small>Total certifications</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="actions-grid">
+      <button class="action-card" (click)="navigateToManagement('centres')">
+        <i class="fas fa-building"></i>
+        <span>Manage Centres</span>
+        <small>View, approve, and manage centres</small>
+      </button>
+
+      <button class="action-card" (click)="navigateToManagement('students')">
+        <i class="fas fa-users"></i>
+        <span>Manage Students</span>
+        <small>View and manage all students</small>
+      </button>
+
+      <button class="action-card" (click)="navigateToManagement('courses')">
+        <i class="fas fa-book"></i>
+        <span>Manage Courses</span>
+        <small>Create and manage courses</small>
+      </button>
+
+      <button class="action-card" (click)="navigateToManagement('exams')">
+        <i class="fas fa-clipboard-list"></i>
+        <span>Manage Exams</span>
+        <small>Create and monitor exams</small>
+      </button>
+
+      <button class="action-card" (click)="navigateToManagement('certificates')">
+        <i class="fas fa-certificate"></i>
+        <span>Certificates</span>
+        <small>View and manage certificates</small>
+      </button>
+
+      <button class="action-card" (click)="navigateToManagement('reports')">
+        <i class="fas fa-chart-bar"></i>
+        <span>Reports</span>
+        <small>Analytics and reporting</small>
+      </button>
+    </div>
+  </div>
+
+  <!-- Pending Approvals -->
+  <div class="pending-approvals" *ngIf="pendingApprovals.length > 0">
+    <h2>Pending Centre Approvals</h2>
+    <div class="approval-cards">
+      <div class="approval-card" *ngFor="let centre of pendingApprovals">
+        <div class="centre-info">
+          <h4>{{ centre.name }}</h4>
+          <p><strong>Code:</strong> {{ centre.code }}</p>
+          <p><strong>Owner:</strong> {{ centre.ownerName }}</p>
+          <p><strong>Phone:</strong> {{ centre.ownerPhone }}</p>
+          <p><strong>Address:</strong> {{ centre.address }}</p>
+        </div>
+        <div class="approval-actions">
+          <button class="btn btn-success" (click)="approveCentre(centre.id)">
+            <i class="fas fa-check"></i> Approve
+          </button>
+          <button class="btn btn-danger" (click)="rejectCentre(centre.id)">
+            <i class="fas fa-times"></i> Reject
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="recent-activity">
+    <div class="activity-section">
+      <h3>Recent Centres</h3>
+      <div class="activity-list" *ngIf="!loading.centres; else loadingTemplate">
+        <div class="activity-item" *ngFor="let centre of recentCentres">
+          <div class="activity-icon">
+            <i class="fas fa-building"></i>
+          </div>
+          <div class="activity-content">
+            <h4>{{ centre.name }}</h4>
+            <p>{{ centre.ownerName }} - {{ centre.code }}</p>
+            <span class="status" [class]="centre.status.toLowerCase()">{{ centre.status }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <h3>Recent Students</h3>
+      <div class="activity-list" *ngIf="!loading.students; else loadingTemplate">
+        <div class="activity-item" *ngFor="let student of recentStudents">
+          <div class="activity-icon">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="activity-content">
+            <h4>{{ student.fullName }}</h4>
+            <p>{{ student.email }}</p>
+            <small>{{ student.centreName || 'Centre: ' + student.centreId }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Template -->
+  <ng-template #loadingTemplate>
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>Loading...</p>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,38 @@
+.testimonials {
+    padding: 2rem 1rem;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    padding: 1.25rem;
+}
+
+.card p {
+    margin: 0 0 0.75rem 0;
+    color: #333;
+}
+
+.card h4 {
+    margin: 0;
+    color: #1E88E5;
+    font-family: 'Poppins', sans-serif;
+}
+
+.card span {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 992px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+}

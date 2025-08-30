@@ -1,0 +1,67 @@
+.about-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-hero {
+  text-align: center;
+  margin-bottom: 4rem;
+  padding: 3rem 0;
+  background: linear-gradient(135deg, #1E88E5, #43A047);
+  color: white;
+  border-radius: 15px;
+}
+
+.about-hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.about-hero p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.about-content {
+  display: grid;
+  gap: 2rem;
+}
+
+.mission-section,
+.vision-section,
+.why-gdsc-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.mission-section h2,
+.vision-section h2,
+.why-gdsc-section h2 {
+  color: #1E88E5;
+  margin-bottom: 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.why-gdsc-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.why-gdsc-section li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.why-gdsc-section li:before {
+  content: "✓";
+  color: #43A047;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}

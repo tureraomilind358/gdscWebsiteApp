@@ -1,0 +1,53 @@
+.users-wrapper {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+h2 {
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.subtitle {
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.users-table th,
+.users-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.users-table th {
+  background: #f4f6f9;
+}
+
+.btn {
+  padding: 6px 12px;
+  margin-right: 6px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn.edit {
+  background: #007bff;
+  color: #fff;
+}
+
+.btn.delete {
+  background: #e74c3c;
+  color: #fff;
+}

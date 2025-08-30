@@ -1,0 +1,255 @@
+<div class="centre-admin-dashboard">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="welcome-section">
+        <h1>Centre Admin Dashboard</h1>
+        <p>Welcome, {{ currentUser?.firstName }} - {{ currentUser?.centreName }}</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-outline" (click)="loadDashboardData()">
+          <i class="fas fa-sync-alt"></i> Refresh
+        </button>
+        <button class="btn btn-danger" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon students">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.totalStudents }}</h3>
+        <p>Total Students</p>
+        <small>Registered in your centre</small>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon enrolments">
+        <i class="fas fa-user-graduate"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.activeEnrolments }}</h3>
+        <p>Active Enrolments</p>
+        <small>Students enrolled in courses</small>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon certificates">
+        <i class="fas fa-certificate"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.completedCertifications }}</h3>
+        <p>Certifications</p>
+        <small>Completed by your students</small>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon exams">
+        <i class="fas fa-clipboard-list"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.pendingExams }}</h3>
+        <p>Pending Exams</p>
+        <small>Students ready to take exams</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student Management Section -->
+  <div class="management-section">
+    <div class="section-header">
+      <h2>Student Management</h2>
+      <div class="section-actions">
+        <button class="btn btn-primary" (click)="openAddStudentModal()">
+          <i class="fas fa-plus"></i> Add Student
+        </button>
+        <button class="btn btn-secondary" (click)="openBulkImportModal()">
+          <i class="fas fa-upload"></i> Bulk Import
+        </button>
+      </div>
+    </div>
+
+    <!-- Students Table -->
+    <div class="students-table" *ngIf="!loading.students; else loadingTemplate">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Govt ID</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let student of students">
+            <td>{{ student.fullName }}</td>
+            <td>{{ student.email }}</td>
+            <td>{{ student.phone }}</td>
+            <td>{{ student.govtId }}</td>
+            <td>
+              <span class="status" [class]="student.isActive ? 'active' : 'inactive'">
+                {{ student.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-icon" (click)="editStudent(student)" title="Edit">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn-icon danger" (click)="deleteStudent(student)" title="Delete">
+                  <i class="fas fa-trash"></i>
+                </button>
+                <select class="enroll-select" (change)="enrollStudent(student, $any($event.target).value)">
+                  <option value="">Enroll in Course</option>
+                  <option *ngFor="let course of courses" [value]="course.id">{{ course.title }}</option>
+                </select>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="actions-grid">
+      <button class="action-card" (click)="navigateToSection('students')">
+        <i class="fas fa-users"></i>
+        <span>All Students</span>
+        <small>View and manage all students</small>
+      </button>
+
+      <button class="action-card" (click)="navigateToSection('enrolments')">
+        <i class="fas fa-user-graduate"></i>
+        <span>Enrolments</span>
+        <small>Manage course enrolments</small>
+      </button>
+
+      <button class="action-card" (click)="navigateToSection('exams')">
+        <i class="fas fa-clipboard-list"></i>
+        <span>Exam Schedule</span>
+        <small>Schedule and monitor exams</small>
+      </button>
+
+      <button class="action-card" (click)="navigateToSection('results')">
+        <i class="fas fa-chart-line"></i>
+        <span>Results</span>
+        <small>View exam results and analytics</small>
+      </button>
+
+      <button class="action-card" (click)="navigateToSection('certificates')">
+        <i class="fas fa-certificate"></i>
+        <span>Certificates</span>
+        <small>View issued certificates</small>
+      </button>
+
+      <button class="action-card" (click)="navigateToSection('reports')">
+        <i class="fas fa-chart-bar"></i>
+        <span>Reports</span>
+        <small>Centre performance reports</small>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Student Modal -->
+<div class="modal-overlay" *ngIf="showAddStudentModal" (click)="closeAddStudentModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Add New Student</h3>
+      <button class="close-btn" (click)="closeAddStudentModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="addStudent()">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fullName">Full Name *</label>
+            <input type="text" id="fullName" [(ngModel)]="newStudent.fullName" name="fullName" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" [(ngModel)]="newStudent.email" name="email" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Phone *</label>
+            <input type="tel" id="phone" [(ngModel)]="newStudent.phone" name="phone" required>
+          </div>
+          <div class="form-group">
+            <label for="dob">Date of Birth *</label>
+            <input type="date" id="dob" [(ngModel)]="newStudent.dob" name="dob" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="govtId">Government ID *</label>
+            <input type="text" id="govtId" [(ngModel)]="newStudent.govtId" name="govtId" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password (Optional)</label>
+            <input type="password" id="password" [(ngModel)]="newStudent.password" name="password">
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeAddStudentModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Bulk Import Modal -->
+<div class="modal-overlay" *ngIf="showBulkImportModal" (click)="closeBulkImportModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Bulk Import Students</h3>
+      <button class="close-btn" (click)="closeBulkImportModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="upload-section">
+        <p>Upload a CSV or Excel file with student data. Required columns: Full Name, Email, Phone, DOB, Govt ID</p>
+        <div class="file-upload">
+          <input type="file" id="fileInput" (change)="onFileSelected($event)" accept=".csv,.xlsx,.xls">
+          <label for="fileInput" class="file-upload-label">
+            <i class="fas fa-cloud-upload-alt"></i>
+            Choose File
+          </label>
+          <span *ngIf="selectedFile">{{ selectedFile.name }}</span>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeBulkImportModal()">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="uploadBulkStudents()" [disabled]="!selectedFile">
+            Upload Students
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Template -->
+<ng-template #loadingTemplate>
+  <div class="loading-spinner">
+    <i class="fas fa-spinner fa-spin"></i>
+    <p>Loading...</p>
+  </div>
+</ng-template>
