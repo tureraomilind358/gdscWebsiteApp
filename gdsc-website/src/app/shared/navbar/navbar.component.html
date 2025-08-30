@@ -1,4 +1,5 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top border-bottom" [class.scrolled]="isScrolled" (click)="$event.stopPropagation()">
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top border-bottom" [class.scrolled]="isScrolled"
+  (click)="$event.stopPropagation()">
   <div class="container">
     <!-- Brand/Logo -->
     <a class="navbar-brand d-flex align-items-center" routerLink="/" (click)="closeMenus()">
@@ -17,23 +18,17 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <ng-container *ngFor="let item of navItems">
           <li class="nav-item" *ngIf="canShowNavItem(item)">
-            <a class="nav-link d-flex align-items-center" 
-               [routerLink]="item.path" 
-               routerLinkActive="active" 
-               [routerLinkActiveOptions]="{exact: true}"
-               (click)="closeMenus()">
+            <a class="nav-link d-flex align-items-center" [routerLink]="item.path" routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: true}" (click)="closeMenus()">
               <i class="fas fa-{{item.icon}} me-2"></i>
               <span>{{item.label}}</span>
               <i *ngIf="item.children?.length" class="fas fa-chevron-down ms-1 small"></i>
             </a>
-            
+
             <!-- Dropdown for nested menu items -->
             <div *ngIf="item.children?.length" class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a *ngFor="let child of item.children" 
-                 class="dropdown-item" 
-                 [routerLink]="child.path"
-                 routerLinkActive="active"
-                 (click)="closeMenus()">
+              <a *ngFor="let child of item.children" class="dropdown-item" [routerLink]="child.path"
+                routerLinkActive="active" (click)="closeMenus()">
                 <i class="fas fa-{{child.icon}} me-2"></i>
                 {{child.label}}
               </a>
@@ -46,18 +41,20 @@
       <div class="d-flex align-items-center">
         <!-- Authenticated User -->
         <div *ngIf="isLoggedIn()" class="dropdown" [class.show]="userMenuOpen">
-          <button class="btn btn-link text-dark text-decoration-none p-0 dropdown-toggle" (click)="toggleUserMenu($event)">
+          <button class="btn btn-link text-dark text-decoration-none p-0 dropdown-toggle"
+            (click)="toggleUserMenu($event)">
             <div class="d-flex align-items-center">
-              <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
-                   style="width: 36px; height: 36px;">
+              <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                style="width: 36px; height: 36px;">
                 <span *ngIf="!currentUser">{{ getUserInitials() }}</span>
-                <img *ngIf="currentUser" [src]="" class="rounded-circle" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+                <img *ngIf="currentUser" [src]="" class="rounded-circle" alt="Profile"
+                  style="width: 100%; height: 100%; object-fit: cover;">
               </div>
               <span class="ms-2 d-none d-lg-inline">{{ currentUser?.firstName }}</span>
               <i class="fas fa-chevron-down ms-1 small d-none d-lg-inline"></i>
             </div>
           </button>
-          
+
           <div class="dropdown-menu dropdown-menu-end shadow" [class.show]="userMenuOpen">
             <div class="px-3 py-2 border-bottom">
               <div class="fw-bold">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</div>
@@ -66,19 +63,20 @@
                 <span class="badge bg-primary">{{ getUserRoleDisplay() }}</span>
               </div>
             </div>
-            
+
             <a class="dropdown-item" [routerLink]="['/profile']" (click)="closeMenus()">
               <i class="fas fa-user me-2"></i>Profile
             </a>
             <a class="dropdown-item" [routerLink]="['/settings']" (click)="closeMenus()">
               <i class="fas fa-cog me-2"></i>Settings
             </a>
-            
+
             <div *ngIf="hasRole(UserRole.STUDENT)" class="dropdown-divider"></div>
-            <a *ngIf="hasRole(UserRole.STUDENT)" class="dropdown-item" [routerLink]="['/student/dashboard']" (click)="closeMenus()">
+            <a *ngIf="hasRole(UserRole.STUDENT)" class="dropdown-item" [routerLink]="['/student/dashboard']"
+              (click)="closeMenus()">
               <i class="fas fa-tachometer-alt me-2"></i>Student Dashboard
             </a>
-            
+
             <div class="dropdown-divider"></div>
             <a class="dropdown-item text-danger" (click)="logout()">
               <i class="fas fa-sign-out-alt me-2"></i>Logout
@@ -89,7 +87,7 @@
         <!-- Guest User -->
         <div *ngIf="!isLoggedIn()" class="d-flex gap-2">
           <div class="dropdown">
-            <button class="btn btn-outline-primary dropdown-toggle text-primary" (click)="toggleUserMenu($event)">
+            <button class="btn btn-outline-primary" (click)="toggleUserMenu($event)">
               <i class="fas fa-user-plus me-1"></i>
               <span>Register</span>
             </button>
@@ -103,8 +101,8 @@
               </a>
             </div>
           </div>
-          
-          <button class="btn btn-primary text-white" (click)="login()">
+
+          <button class="btn btn-primary text-primary" (click)="login()">
             <i class="fas fa-sign-in-alt me-1"></i>
             <span>Login</span>
           </button>

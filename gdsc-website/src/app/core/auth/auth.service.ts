@@ -46,9 +46,6 @@ export enum CentreStatus {
   providedIn: 'root'
 })
 export class AuthService {
-  isLoggedIn(): boolean {
-    return this.isAuthenticated();
-  }
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser: Observable<User | null>;
 
@@ -91,6 +88,10 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return !!this.currentUserValue;
+  }
+
+  isLoggedIn(): boolean {
+    return this.isAuthenticated();
   }
 
   hasRole(role: UserRole): boolean {

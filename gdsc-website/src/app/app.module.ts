@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { CommonModule, DatePipe } from '@angular/common';
 
 // Angular Material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -43,9 +42,6 @@ import { LoginComponent } from './core/auth/login/login.component';
 import { RegisterComponent } from './core/auth/register/register.component';
 import { PageNotFoundComponent } from './core/auth/pagenotfound/pagenotfound.component';
 
-// Shared Components
-import { NavbarComponent } from './shared/navbar/navbar.component';
-// import { FooterComponent } from './shared/footer/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -63,8 +59,6 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
     LoginComponent,
     RegisterComponent,
     PageNotFoundComponent,
-    // NavbarComponent,
-    // FooterComponent
   ],
   imports: [
     BrowserModule,
@@ -75,7 +69,7 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
     BrowserAnimationsModule,
     CoreModule,
     SharedModule,
-    // RouterModule,
+    RouterModule,
     // NgChartsModule
   ],
   bootstrap: [AppComponent]
