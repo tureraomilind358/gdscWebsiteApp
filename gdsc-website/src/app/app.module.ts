@@ -25,7 +25,7 @@ import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 
 // Page Components
-import { HomeComponent } from './pages/home/home/home.component';
+import { HomeComponent } from './pages/home/home.component';
 import { AboutComponent } from './pages/about/about/about.component';
 import { ContactComponent } from './pages/contact/contact/contact.component';
 import { FaqComponent } from './pages/faq/faq.component';
@@ -46,11 +46,10 @@ import { PageNotFoundComponent } from './core/auth/pagenotfound/pagenotfound.com
 // Shared Components
 import { NavbarComponent } from './shared/navbar/navbar.component';
 // import { FooterComponent } from './shared/footer/footer/footer.component';
-import { FooterComponent } from './shared/footer/footer.component';
 
 @NgModule({
   declarations: [
-    // AppComponent,
+    AppComponent,
     HomeComponent,
     AboutComponent,
     ContactComponent,
@@ -65,7 +64,7 @@ import { FooterComponent } from './shared/footer/footer.component';
     RegisterComponent,
     PageNotFoundComponent,
     // NavbarComponent,
-    FooterComponent
+    // FooterComponent
   ],
   imports: [
     BrowserModule,
@@ -79,6 +78,6 @@ import { FooterComponent } from './shared/footer/footer.component';
     // RouterModule,
     // NgChartsModule
   ],
-
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

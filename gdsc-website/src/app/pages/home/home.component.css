@@ -16,7 +16,7 @@
   right: 0;
   width: 60%;
   height: 100%;
-  background: url() no-repeat;
+  /* background: url() no-repeat; */
   background-size: cover;
   opacity: 0.1;
   z-index: 0;

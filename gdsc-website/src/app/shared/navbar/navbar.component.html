@@ -3,7 +3,7 @@
     <!-- Brand/Logo -->
     <a class="navbar-brand d-flex align-items-center" routerLink="/" (click)="closeMenus()">
       <img src="assets/logo.png" alt="GDSC Portal" height="40" class="d-inline-block align-text-top">
-      <span class="ms-2 fw-bold text-primary d-none d-md-inline">GDSC Portal</span>
+      <!-- <span class="ms-2 fw-bold text-primary d-none d-md-inline">GDSC Portal</span> -->
     </a>
 
     <!-- Mobile Toggle Button -->
@@ -89,22 +89,22 @@
         <!-- Guest User -->
         <div *ngIf="!isLoggedIn()" class="d-flex gap-2">
           <div class="dropdown">
-            <button class="btn btn-outline-primary dropdown-toggle" (click)="toggleUserMenu($event)">
+            <button class="btn btn-outline-primary dropdown-toggle text-primary" (click)="toggleUserMenu($event)">
               <i class="fas fa-user-plus me-1"></i>
               <span>Register</span>
             </button>
             <div class="dropdown-menu dropdown-menu-end" [class.show]="userMenuOpen">
               <h6 class="dropdown-header">Register As</h6>
-              <a class="dropdown-item" [routerLink]="['/register/student']" (click)="closeMenus()">
+              <a class="dropdown-item text-primary" [routerLink]="['/register/student']" (click)="closeMenus()">
                 <i class="fas fa-user-graduate me-2"></i>Student
               </a>
-              <a class="dropdown-item" [routerLink]="['/register/centre']" (click)="closeMenus()">
+              <a class="dropdown-item text-primary" [routerLink]="['/register/centre']" (click)="closeMenus()">
                 <i class="fas fa-building me-2"></i>Centre
               </a>
             </div>
           </div>
           
-          <button class="btn btn-primary" (click)="login()">
+          <button class="btn btn-primary text-white" (click)="login()">
             <i class="fas fa-sign-in-alt me-1"></i>
             <span>Login</span>
           </button>

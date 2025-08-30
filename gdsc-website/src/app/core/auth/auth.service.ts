@@ -47,7 +47,7 @@ export enum CentreStatus {
 })
 export class AuthService {
   isLoggedIn(): boolean {
-    throw new Error('Method not implemented.');
+    return this.isAuthenticated();
   }
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser: Observable<User | null>;
