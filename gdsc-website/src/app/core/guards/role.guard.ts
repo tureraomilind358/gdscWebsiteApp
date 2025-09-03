@@ -39,7 +39,8 @@ export class RoleGuard implements CanActivate {
 
   private redirectToAppropriateRoute(): void {
     const user = this.authService.currentUserValue;
-    
+    console.log('this is user:', user);
+
     if (!user) {
       this.router.navigate(['/login']);
       return;
@@ -59,5 +60,6 @@ export class RoleGuard implements CanActivate {
       default:
         this.router.navigate(['/unauthorized']);
     }
+
   }
 }

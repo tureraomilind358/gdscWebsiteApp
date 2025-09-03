@@ -4,6 +4,7 @@ import { AuthService, UserRole } from '../../../core/auth/auth.service';
 import { StudentService, Student, CreateStudentRequest } from '../../../core/services/student.service';
 import { CourseService, Course } from '../../../core/services/course.service';
 import { CentreService } from '../../../core/services/centre.service';
+import { UserService } from 'src/app/core/services/user.services';
 
 @Component({
   selector: 'app-centre-admin-dashboard',
@@ -13,12 +14,13 @@ import { CentreService } from '../../../core/services/centre.service';
 export class CentreAdminDashboardComponent implements OnInit {
   currentUser = this.authService.currentUserValue;
   centreId = this.authService.getCurrentCentreId();
-  
+
   // Dashboard data
   students: Student[] = [];
   courses: Course[] = [];
   recentStudents: Student[] = [];
-  
+  studentList: any[] = [];
+
   // Statistics
   stats = {
     totalStudents: 0,
@@ -39,13 +41,21 @@ export class CentreAdminDashboardComponent implements OnInit {
   selectedFile: File | null = null;
 
   // New student form
-  newStudent: CreateStudentRequest = {
-    fullName: '',
+  newStudent: any = {
+    firstName: '',
+    lastName: '',
     email: '',
-    phone: '',
-    dob: '',
-    govtId: '',
-    password: ''
+    phone: 0,
+    dateOfBirth: '',
+    gender: '',
+    address: '',
+    city: '',
+    state: '',
+    zipCode: 0,
+    enrollmentDate: '',
+    status: 'active',
+    centerId: 0,
+    userId: 0
   };
 
   constructor(
@@ -53,8 +63,9 @@ export class CentreAdminDashboardComponent implements OnInit {
     private studentService: StudentService,
     private courseService: CourseService,
     private centreService: CentreService,
+    private userService: UserService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     if (!this.authService.isCentreAdmin()) {
@@ -62,13 +73,24 @@ export class CentreAdminDashboardComponent implements OnInit {
       return;
     }
 
+    this.userService.getUserByCenterId(this.centreId!).subscribe({
+      next: (userData: any) => {
+        this.studentList = userData.data;
+        console.log('User ID:', this.studentList);
+      },
+      error: (error) => {
+        console.error('Error loading user:', error);
+      }
+    });
+
     if (!this.centreId) {
       console.error('Centre ID not found for centre admin');
       this.router.navigate(['/unauthorized']);
       return;
     }
-    
+
     this.loadDashboardData();
+    
   }
 
   loadDashboardData(): void {
@@ -79,14 +101,56 @@ export class CentreAdminDashboardComponent implements OnInit {
 
   loadStudents(): void {
     this.loading.students = true;
+    console.log('Loading students for centre:', this.centreId);
+
     this.studentService.getStudentsByCentre(this.centreId!).subscribe({
-      next: (students) => {
-        this.students = students;
-        this.recentStudents = students.slice(0, 5);
+      next: (response: any) => {
+        // console.log('API Response:', response);
+        // this.studentList = response.data.length * 2;
+        // console.log('Student ID:', this.studentList);
+        // Handle different response structures
+        if (response && response.data) {
+          this.students = response.data;
+        } else if (Array.isArray(response)) {
+          this.students = response;
+        } else {
+          this.students = [];
+        }
+        // console.log('Students loaded:', this.students);
+        
+        this.recentStudents = this.students.slice(0, 5);
         this.loading.students = false;
       },
       error: (error) => {
         console.error('Error loading students:', error);
+        // For debugging - add some mock data to test the UI
+        this.students = [
+          {
+            id: '1',
+            firstName: 'John',
+            lastName: 'Doe',
+            email: 'john.doe@example.com',
+            phone: '1234567890',
+            govtId: 'ID123456',
+            dob: new Date('1990-01-01'),
+            centreId: this.centreId || '',
+            createdAt: new Date(),
+            isActive: true
+          },
+          {
+            id: '2',
+            firstName: 'Jane',
+            lastName: 'Smith',
+            email: 'jane.smith@example.com',
+            phone: '0987654321',
+            govtId: 'ID789012',
+            dob: new Date('1992-05-15'),
+            centreId: this.centreId || '',
+            createdAt: new Date(),
+            isActive: true
+          }
+        ] as any[];
+        console.log('Using mock data for testing:', this.students);
         this.loading.students = false;
       }
     });
@@ -114,10 +178,15 @@ export class CentreAdminDashboardComponent implements OnInit {
     this.loading.stats = false;
   }
 
-  // Student Management
   openAddStudentModal(): void {
+    console.log('openAddStudentModal called');
     this.showAddStudentModal = true;
+    console.log('showAddStudentModal set to:', this.showAddStudentModal);
     this.resetNewStudentForm();
+    // Force change detection
+    setTimeout(() => {
+      console.log('Modal should be visible now');
+    }, 100);
   }
 
   closeAddStudentModal(): void {
@@ -127,19 +196,27 @@ export class CentreAdminDashboardComponent implements OnInit {
 
   resetNewStudentForm(): void {
     this.newStudent = {
-      fullName: '',
+      firstName: '',
+      lastName: '',
       email: '',
       phone: '',
-      dob: '',
-      govtId: '',
-      password: ''
+      dateOfBirth: '',
+      gender: '',
+      address: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      enrollmentDate: '',
+      status: 'active',
+      centerId:this.centreId,
+      userId: 0
     };
   }
 
   addStudent(): void {
     if (!this.centreId) return;
-
-    this.studentService.createStudent(this.centreId, this.newStudent).subscribe({
+    console.log('Adding student:', this.newStudent);
+    this.studentService.createStudent(this.newStudent).subscribe({
       next: (student) => {
         this.students.unshift(student);
         this.loadStatistics();
@@ -194,7 +271,7 @@ export class CentreAdminDashboardComponent implements OnInit {
   }
 
   deleteStudent(student: Student): void {
-    if (confirm(`Are you sure you want to delete ${student.fullName}?`)) {
+    if (confirm(`Are you sure you want to delete ${student.id}?`)) {
       this.studentService.deleteStudent(student.id).subscribe({
         next: () => {
           this.students = this.students.filter(s => s.id !== student.id);
@@ -210,9 +287,9 @@ export class CentreAdminDashboardComponent implements OnInit {
   }
 
   enrollStudent(student: Student, courseId: string): void {
-    this.studentService.enrollStudent(student.id, courseId).subscribe({
+    this.studentService.enrollStudent(student.firstName, courseId).subscribe({
       next: () => {
-        alert(`${student.fullName} enrolled successfully!`);
+        alert(`${student.firstName} enrolled successfully!`);
         this.loadStatistics();
       },
       error: (error) => {

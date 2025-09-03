@@ -49,7 +49,7 @@ export interface KYCDocument {
   providedIn: 'root'
 })
 export class CentreService {
-  private apiUrl = `${environment.apiUrl}/centres`;
+  private apiUrl = `${environment.apiUrl}/centers`;
 
   constructor(private http: HttpClient) {}
 
