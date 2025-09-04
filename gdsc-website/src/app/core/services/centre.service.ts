@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface Centre {
+  firstName: string;
+  lastName: string;
   id: string;
   name: string;
   address: string;
@@ -13,15 +15,14 @@ export interface Centre {
   createdAt: Date;
   updatedAt: Date;
   code: string;
-  ownerName: string;
-  ownerPhone: string;
+  phone: any;
 }
 
 export enum CentreStatus {
-  PENDING = 'PENDING',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED',
-  SUSPENDED = 'SUSPENDED'
+  CLOSED = 'CLOSED',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  MAINTENANCE = 'MAINTENANCE'
 }
 
 export interface CreateCentreRequest {
@@ -49,9 +50,9 @@ export interface KYCDocument {
   providedIn: 'root'
 })
 export class CentreService {
-  private apiUrl = `${environment.apiUrl}/centres`;
+  private apiUrl = `${environment.apiUrl}/centers`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Public centre registration
   registerCentre(centreData: CreateCentreRequest): Observable<Centre> {
@@ -104,9 +105,9 @@ export class CentreService {
   }
 
   rejectKYCDocument(centreId: string, documentId: string, remarks: string): Observable<KYCDocument> {
-    return this.http.patch<KYCDocument>(`${this.apiUrl}/${centreId}/kyc/${documentId}`, { 
-      status: 'REJECTED', 
-      remarks 
+    return this.http.patch<KYCDocument>(`${this.apiUrl}/${centreId}/kyc/${documentId}`, {
+      status: 'REJECTED',
+      remarks
     });
   }
 }

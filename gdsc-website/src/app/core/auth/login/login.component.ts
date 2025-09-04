@@ -1,20 +1,14 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../auth.service';
+import { AuthService, UserRole } from '../auth.service';
+import { UserService } from '../../services/user.services';
 
-interface DemoUser {
-  id: string;
+interface AuthUser {
   username: string;
-  email: string;
-  password: string;
-  phone: string;
-  role: 'SUPER_ADMIN' | 'CENTRE_ADMIN' | 'STUDENT';
-  firstName: string;
-  lastName: string;
-  centreId?: string;
-  centreName?: string;
   token: string;
+  roles: string[];
+  role?: string; // Converted from roles array
 }
 
 @Component({
@@ -29,108 +23,64 @@ export class LoginComponent {
   showPassword = false;
 
   // Static demo credentials for different roles
-  private demoUsers: DemoUser[] = [
-    {
-      id: '1',
-      username: 'superadmin',
-      email: 'superadmin@gdsc.com',
-      password: 'admin123',
-      phone: '9876543210',
-      role: 'SUPER_ADMIN',
-      firstName: 'Super',
-      lastName: 'Admin',
-      token: 'mock-super-admin-token'
-    },
-    {
-      id: '2',
-      username: 'centreadmin',
-      email: 'centreadmin@gdsc.com',
-      password: 'centre123',
-      phone: '9876543211',
-      role: 'CENTRE_ADMIN',
-      firstName: 'Centre',
-      lastName: 'Admin',
-      centreId: 'CTR001',
-      centreName: 'Mumbai Centre',
-      token: 'mock-centre-admin-token'
-    },
-    {
-      id: '3',
-      username: 'student',
-      email: 'student@gdsc.com',
-      password: 'student123',
-      phone: '9876543212',
-      role: 'STUDENT',
-      firstName: 'John',
-      lastName: 'Doe',
-      token: 'mock-student-token'
-    }
-  ];
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private userService: UserService,
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      rememberMe: [false]
     });
   }
 
-  onSubmit() {
-    if (this.loginForm.valid) {
-      this.isLoading = true;
-      this.errorMessage = '';
+onSubmit() {
+  if (this.loginForm.valid) {
+    this.isLoading = true;
+    this.errorMessage = '';
 
-      const { email, password } = this.loginForm.value;
+    const { username, password } = this.loginForm.value;
 
-      // Find matching user from demo credentials
-      const authenticatedUser = this.demoUsers.find(
-        user => user.email === email && user.password === password
-      );
-
-      // Simulate API delay
-      setTimeout(() => {
-        if (authenticatedUser) {
-          // Remove password from stored user data
-          const { password: _, ...userWithoutPassword } = authenticatedUser;
-          localStorage.setItem('currentUser', JSON.stringify(userWithoutPassword));
+    this.authService.login(username, password).subscribe({
+      next: (response) => {
+        if (response.status === 'SUCCESS') {
           this.isLoading = false;
-          this.redirectBasedOnRole(authenticatedUser);
-        } else {
-          this.isLoading = false;
-          this.errorMessage = 'Invalid email or password. Please check demo credentials.';
+          const role = response.data.roles[0];
+          this.userService.getUserByUserName(username).subscribe(userResponse => {
+            console.log('User Details:', userResponse);
+            localStorage.setItem('currentUserData', JSON.stringify(userResponse));
+          });
+          this.redirectBasedOnRole(role);
         }
-      }, 1000);
-    }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = error.error?.message || 'Login failed. Please try again.';
+      }
+    });
   }
+}
 
-  private redirectBasedOnRole(user: any): void {
-    // Update auth service with the new user
-    this.authService.setCurrentUser(user);
-    
-    switch (user.role) {
-      case 'SUPER_ADMIN':
-        this.router.navigate(['/super-admin']).then(() => {
-          window.location.reload(); // Force reload to update navbar
-        });
-        break;
-      case 'CENTRE_ADMIN':
-        this.router.navigate(['/centre-admin']).then(() => {
-          window.location.reload();
-        });
-        break;
-      case 'STUDENT':
-        this.router.navigate(['/student']).then(() => {
-          window.location.reload();
-        });
-        break;
-      default:
-        this.router.navigate(['/unauthorized']);
-    }
+private redirectBasedOnRole(role: string): void {
+  switch (role) {
+    case UserRole.SUPER_ADMIN:
+      this.router.navigate(['/admin']);
+      break;
+    case UserRole.CENTRE_ADMIN:  // This will now match 'ROLE_CENTER'
+      this.router.navigate(['/centre-admin']);
+      break;
+    case UserRole.STUDENT:
+      this.router.navigate(['/student']);
+      break;
+    default:
+      console.log('Unrecognized role:', role); // For debugging
+      this.router.navigate(['/unauthorized']);
   }
+}
+
+
 
   togglePassword() {
     this.showPassword = !this.showPassword;
@@ -141,8 +91,8 @@ export class LoginComponent {
     if (control?.hasError('required')) {
       return `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
     }
-    if (control?.hasError('email')) {
-      return 'Please enter a valid email address';
+    if (control?.hasError('username')) {
+      return 'Please enter a valid username address';
     }
     if (control?.hasError('minlength')) {
       return `Password must be at least 6 characters`;

@@ -17,22 +17,22 @@ export class SuperAdminDashboardComponent implements OnInit {
   // Dashboard statistics
   stats = {
     totalCentres: 0,
-    pendingCentres: 0,
-    approvedCentres: 0,
+    pendingCenters: 0,
+    approvedCenters: 0,
     totalStudents: 0,
     totalCourses: 0,
     totalCertificates: 0
   };
 
   // Recent data
-  recentCentres: Centre[] = [];
+  recentCenters: Centre[] = [];
   recentStudents: Student[] = [];
   pendingApprovals: Centre[] = [];
 
   // Loading states
   loading = {
     stats: true,
-    centres: true,
+    centers: true,
     students: true
   };
 
@@ -64,36 +64,38 @@ export class SuperAdminDashboardComponent implements OnInit {
   loadStatistics(): void {
     this.loading.stats = true;
     
-    // Load all centres
+    // Load all centers
     this.centreService.getAllCentres().subscribe({
-      next: (centres) => {
-        this.stats.totalCentres = centres.length;
-        this.stats.pendingCentres = centres.filter(c => c.status === CentreStatus.PENDING).length;
-        this.stats.approvedCentres = centres.filter(c => c.status === CentreStatus.APPROVED).length;
+      next: (centers:any) => {
+        this.stats.totalCentres = centers.data.length;
+        this.stats.pendingCenters = centers.data.filter((c:any) => c.status === CentreStatus.INACTIVE).length;
+        this.stats.approvedCenters = centers.data.filter((c:any) => c.status === CentreStatus.ACTIVE).length;
       },
-      error: (error) => console.error('Error loading centres:', error)
+      error: (error) => console.error('Error loading centers:', error)
     });
 
     // Load all students
     this.studentService.getAllStudents().subscribe({
-      next: (students) => {
-        this.stats.totalStudents = students.length;
+      next: (students:any) => {
+        this.stats.totalStudents = students.data.length;
       },
       error: (error) => console.error('Error loading students:', error)
     });
 
     // Load all courses
     this.courseService.getAllCourses().subscribe({
-      next: (courses) => {
-        this.stats.totalCourses = courses.length;
+      next: (courses:any) => {
+        console.log(courses.data);
+        this.stats.totalCourses = courses.data.length;
+        
       },
       error: (error) => console.error('Error loading courses:', error)
     });
 
     // Load certificate statistics
     this.certificateService.getCertificateStatistics().subscribe({
-      next: (certStats) => {
-        this.stats.totalCertificates = certStats.total || 0;
+      next: (certStats:any) => {
+        this.stats.totalCertificates = certStats.data.total || 0;
         this.loading.stats = false;
       },
       error: (error) => {
@@ -104,15 +106,15 @@ export class SuperAdminDashboardComponent implements OnInit {
   }
 
   loadRecentCentres(): void {
-    this.loading.centres = true;
+    this.loading.centers = true;
     this.centreService.getAllCentres().subscribe({
-      next: (centres) => {
-        this.recentCentres = centres.slice(0, 5); // Get latest 5
-        this.loading.centres = false;
+      next: (centers:any) => {
+        this.recentCenters = centers.data.slice(0, 5); // Get latest 5
+        this.loading.centers = false;
       },
       error: (error) => {
-        console.error('Error loading recent centres:', error);
-        this.loading.centres = false;
+        console.error('Error loading recent centers:', error);
+        this.loading.centers = false;
       }
     });
   }
@@ -120,8 +122,10 @@ export class SuperAdminDashboardComponent implements OnInit {
   loadRecentStudents(): void {
     this.loading.students = true;
     this.studentService.getAllStudents().subscribe({
-      next: (students) => {
-        this.recentStudents = students.slice(0, 5); // Get latest 5
+      next: (students:any) => {
+        console.log(students.data);
+        
+        this.recentStudents = students.data.slice(0, 5); // Get latest 5
         this.loading.students = false;
       },
       error: (error) => {
@@ -132,16 +136,18 @@ export class SuperAdminDashboardComponent implements OnInit {
   }
 
   loadPendingApprovals(): void {
-    this.centreService.getAllCentres(CentreStatus.PENDING).subscribe({
-      next: (centres) => {
-        this.pendingApprovals = centres;
+    this.centreService.getAllCentres(CentreStatus.INACTIVE).subscribe({
+      next: (centers:any) => {
+        this.pendingApprovals = centers.data;
+        console.log(this.pendingApprovals);
+        
       },
       error: (error) => console.error('Error loading pending approvals:', error)
     });
   }
 
   approveCentre(centreId: string): void {
-    this.centreService.updateCentreStatus(centreId, CentreStatus.APPROVED).subscribe({
+    this.centreService.updateCentreStatus(centreId, CentreStatus.ACTIVE).subscribe({
       next: () => {
         this.loadPendingApprovals();
         this.loadStatistics();
@@ -151,7 +157,7 @@ export class SuperAdminDashboardComponent implements OnInit {
   }
 
   rejectCentre(centreId: string): void {
-    this.centreService.updateCentreStatus(centreId, CentreStatus.REJECTED, 'Rejected by admin').subscribe({
+    this.centreService.updateCentreStatus(centreId, CentreStatus.INACTIVE, 'Rejected by admin').subscribe({
       next: () => {
         this.loadPendingApprovals();
         this.loadStatistics();

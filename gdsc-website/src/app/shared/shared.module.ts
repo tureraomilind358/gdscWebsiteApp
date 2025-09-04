@@ -20,7 +20,8 @@ import { CertificateVerificationComponent } from './components/certificate-verif
 
 @NgModule({
   declarations: [
-    // Only non-standalone components should be declared here
+    NavbarComponent,
+    FooterComponent,
     SidebarComponent,
     CardComponent,
     HeroBannerComponent,
@@ -34,9 +35,6 @@ import { CertificateVerificationComponent } from './components/certificate-verif
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    // Import standalone components
-    NavbarComponent,
-    FooterComponent
   ],
   exports: [
     CommonModule,

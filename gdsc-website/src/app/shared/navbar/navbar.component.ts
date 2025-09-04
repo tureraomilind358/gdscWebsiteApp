@@ -16,13 +16,6 @@ export interface NavItem {
 
 @Component({
   selector: 'app-navbar',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    RouterLinkActive,
-   
-  ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
@@ -116,8 +109,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
       event.stopPropagation();
     }
     this.userMenuOpen = !this.userMenuOpen;
+    console.log(this.userMenuOpen);
+    
     // Close mobile menu when user menu is toggled
     if (this.userMenuOpen) {
+      console.log('toggleUserMenu clicked');
       this.mobileMenuOpen = false;
     }
   }

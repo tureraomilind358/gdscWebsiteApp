@@ -4,8 +4,11 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface Student {
+isEnabled: any;
+status: any;
   id: string;
-  fullName: string;
+  firstName : string;
+  lastName : string;
   email: string;
   phone: string;
   dob: Date;
@@ -14,10 +17,13 @@ export interface Student {
   centreName?: string;
   isActive: boolean;
   createdAt: Date;
+  centerId: number;
+  userId: number;
 }
 
 export interface CreateStudentRequest {
-  fullName: string;
+  firstName : string;
+  lastName : string;
   email: string;
   phone: string;
   dob: string;
@@ -55,7 +61,7 @@ export class StudentService {
 
   // Centre Admin: Get students for their centre
   getStudentsByCentre(centreId: string): Observable<Student[]> {
-    return this.http.get<Student[]>(`${this.apiUrl}?centreId=${centreId}`);
+    return this.http.get<Student[]>(`${this.apiUrl}/center/${centreId}`);
   }
 
   // Super Admin: Get all students
@@ -69,8 +75,8 @@ export class StudentService {
   }
 
   // Centre Admin: Create new student
-  createStudent(centreId: string, studentData: CreateStudentRequest): Observable<Student> {
-    return this.http.post<Student>(`${this.apiUrl}`, { ...studentData, centreId });
+  createStudent(studentData: CreateStudentRequest): Observable<Student> {
+    return this.http.post<Student>(`${this.apiUrl}`, studentData);
   }
 
   // Centre Admin: Bulk import students
