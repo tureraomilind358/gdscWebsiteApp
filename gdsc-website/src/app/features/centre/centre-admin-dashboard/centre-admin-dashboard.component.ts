@@ -106,11 +106,12 @@ export class CentreAdminDashboardComponent implements OnInit {
     this.studentService.getStudentsByCentre(this.centreId!).subscribe({
       next: (response: any) => {
         // console.log('API Response:', response);
-        // this.studentList = response.data.length * 2;
-        // console.log('Student ID:', this.studentList);
         // Handle different response structures
         if (response && response.data) {
           this.students = response.data;
+          this.stats.totalStudents = this.students.length;
+          this.stats.activeEnrolments = this.students.length;
+          this.stats.completedCertifications = this.students.length;
         } else if (Array.isArray(response)) {
           this.students = response;
         } else {
@@ -159,8 +160,10 @@ export class CentreAdminDashboardComponent implements OnInit {
   loadCourses(): void {
     this.loading.courses = true;
     this.courseService.getAllCourses().subscribe({
-      next: (courses) => {
-        this.courses = courses.filter(c => c.isActive);
+      next: (courses:any) => {
+        console.log("courses ",courses.data);
+        
+        this.courses = courses.data.filter((c:any) => c.isPublished);
         this.loading.courses = false;
       },
       error: (error) => {
@@ -173,7 +176,7 @@ export class CentreAdminDashboardComponent implements OnInit {
   loadStatistics(): void {
     this.loading.stats = true;
     // Calculate statistics from loaded data
-    this.stats.totalStudents = this.students.length;
+    this.stats.totalStudents
     // Additional stats would come from API calls
     this.loading.stats = false;
   }

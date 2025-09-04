@@ -26,7 +26,7 @@
       <div class="stat-content">
         <h3>{{ stats.totalCentres }}</h3>
         <p>Total Centres</p>
-        <small>{{ stats.approvedCentres }} approved, {{ stats.pendingCentres }} pending</small>
+        <small>{{ stats.approvedCenters }} approved, {{ stats.pendingCenters }} pending</small>
       </div>
     </div>
 
@@ -110,12 +110,13 @@
   <div class="pending-approvals" *ngIf="pendingApprovals.length > 0">
     <h2>Pending Centre Approvals</h2>
     <div class="approval-cards">
-      <div class="approval-card" *ngFor="let centre of pendingApprovals">
+     <div class="row">
+       <div class="approval-card col-md-5 my-2 mx-5" *ngFor="let centre of pendingApprovals">
         <div class="centre-info">
           <h4>{{ centre.name }}</h4>
           <p><strong>Code:</strong> {{ centre.code }}</p>
-          <p><strong>Owner:</strong> {{ centre.ownerName }}</p>
-          <p><strong>Phone:</strong> {{ centre.ownerPhone }}</p>
+          <p><strong>Owner:</strong> {{ centre.name }}</p>
+          <p><strong>Phone:</strong> {{ centre.phone }}</p>
           <p><strong>Address:</strong> {{ centre.address }}</p>
         </div>
         <div class="approval-actions">
@@ -127,6 +128,7 @@
           </button>
         </div>
       </div>
+     </div>
     </div>
   </div>
 
@@ -134,14 +136,14 @@
   <div class="recent-activity">
     <div class="activity-section">
       <h3>Recent Centres</h3>
-      <div class="activity-list" *ngIf="!loading.centres; else loadingTemplate">
-        <div class="activity-item" *ngFor="let centre of recentCentres">
+      <div class="activity-list" *ngIf="!loading.centers; else loadingTemplate">
+        <div class="activity-item" *ngFor="let centre of recentCenters">
           <div class="activity-icon">
             <i class="fas fa-building"></i>
           </div>
           <div class="activity-content">
             <h4>{{ centre.name }}</h4>
-            <p>{{ centre.ownerName }} - {{ centre.code }}</p>
+            <p>{{ centre.firstName }} - {{ centre.code }}</p>
             <span class="status" [class]="centre.status.toLowerCase()">{{ centre.status }}</span>
           </div>
         </div>

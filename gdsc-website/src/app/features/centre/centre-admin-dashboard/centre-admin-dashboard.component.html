@@ -3,7 +3,7 @@
   <div class="dashboard-header">
     <div class="header-content">
       <div class="welcome-section">
-        <h1>Centre Admin Dashboard</h1>
+        <h1>Center Admin Dashboard</h1>
         <p>Welcome, {{ currentUser?.firstName }} - {{ currentUser?.centreName }}</p>
       </div>
       <div class="header-actions">
@@ -99,10 +99,9 @@
             <td>{{ student.email }}</td>
             <td>{{ student.phone }}</td>
             <td>S{{ student.id }}U{{ student.userId }}</td>
-            <td>{{ student.status}}</td>
             <td>
-              <span class="status" [class]="student.isActive ? 'active' : 'inactive'">
-                {{ student.isActive ? 'Active' : 'Inactive' }}
+              <span class="status" [class]="student.status ? 'active' : 'inactive'">
+                {{ student.status ? 'Active' : 'Inactive' }}
               </span>
             </td>
             <td>
@@ -115,7 +114,7 @@
                 </button>
                 <select class="enroll-select" (change)="enrollStudent(student, $any($event.target).value)">
                   <option value="">Enroll in Course</option>
-                  <option *ngFor="let course of courses" [value]="course.id">{{ course.title }}</option>
+                  <option *ngFor="let course of courses" [value]="course.id">{{ course.name }}</option>
                 </select>
               </div>
             </td>

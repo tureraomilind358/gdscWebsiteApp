@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface Course {
+name: any;
   id: string;
   title: string;
   code: string;

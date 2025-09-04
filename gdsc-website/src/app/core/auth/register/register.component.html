@@ -42,7 +42,7 @@
           <label for="description">Description</label>
           <div class="input-wrapper">
             <i class="fas fa-info-circle input-icon"></i>
-            <textarea id="description" formControlName="description" placeholder="Enter center description" rows="3"
+            <textarea id="description" formControlName="description" placeholder="Enter center description" rows="2" cols="75"
               [class.error]="registerForm.get('description')?.invalid && registerForm.get('description')?.touched"></textarea>
           </div>
           <div class="error-message"

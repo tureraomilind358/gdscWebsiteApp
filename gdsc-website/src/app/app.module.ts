@@ -33,7 +33,7 @@ import { FaqComponent } from './pages/faq/faq.component';
 import { ForInstitutesComponent } from './features/centre/centre-list/for-institutes/for-institutes.component';
 import { ForStudentsComponent } from './features/candidate/exam-list/for-students/for-students.component';
 import { StudentPortalComponent } from './features/candidate/profile/student-portal/student-portal.component';
-import { InstitutePortalComponent } from './features/centre/centre-dashboard/institute-portal/institute-portal.component';
+// import { InstitutePortalComponent } from './features/centre/centre-dashboard/institute-portal/institute-portal.component';
 import { CertificatePreviewComponent } from './features/certification/generate-certificate/certificate-preview/certificate-preview.component';
 import { DashboardComponent } from './features/candidate/profile/dashboard.component';
 
@@ -53,7 +53,6 @@ import { PageNotFoundComponent } from './core/auth/pagenotfound/pagenotfound.com
     ForInstitutesComponent,
     ForStudentsComponent,
     StudentPortalComponent,
-    InstitutePortalComponent,
     CertificatePreviewComponent,
     DashboardComponent,
     LoginComponent,

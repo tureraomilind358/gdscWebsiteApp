@@ -228,11 +228,11 @@ countries: any[] = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguil
       if (this.registrationType === 'center') {
         // Center registration - add default values
         userData.enrollmentDate = new Date().toISOString();
-        userData.status = 'PENDING';
+        userData.status = 'INACTIVE';
       } else {
         // Student registration - add default values
         userData.enrollmentDate = new Date().toISOString();
-        userData.status = 'ACTIVE';
+        userData.status = 'INACTIVE';
       }
 
       const endpoint = this.registrationType === 'center' ? 'centers/register' : 'student-register';
