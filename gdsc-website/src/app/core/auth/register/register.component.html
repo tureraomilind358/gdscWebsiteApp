@@ -5,20 +5,19 @@
       <div class="logo-section">
         <img src="assets/logo.png" alt="GDSC Logo" class="logo">
         <h1>{{ registrationType === 'center' ? 'Center Registration' : 'Student Registration' }}</h1>
-        <p>{{ registrationType === 'center' ? 'Create your center account to manage students and exams.' : 'Create your
-          student account to access courses and exams.' }}</p>
+        <p>{{ registrationType === 'center' ? 'Create your center account to manage students and exams.' : 'Create your student account to access courses and exams.' }}</p>
       </div>
       
       <!-- Registration Type Toggle -->
       <div class="registration-toggle">
-        <button type="button" class="toggle-btn" [class.active]="registrationType === 'center'"
+        <!-- <button type="button" class="toggle-btn" [class.active]="registrationType === 'center'"
           (click)="switchRegistrationType('center')">
           Center
-        </button>
-        <button type="button" class="toggle-btn" [class.active]="registrationType === 'student'"
+        </button> -->
+        <!-- <button type="button" class="toggle-btn" [class.active]="registrationType === 'student'"
           (click)="switchRegistrationType('student')">
           Student
-        </button>
+        </button> -->
       </div>
     </div>
 

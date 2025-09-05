@@ -31,6 +31,41 @@ export interface CreateStudentRequest {
   password?: string;
 }
 
+export interface StudentRegistrationRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  dateOfBirth: string;
+  gender: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  enrollmentDate: string;
+  status: string;
+  centerId: number;
+  userId: number;
+}
+
+export interface StudentRegistrationResponse {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  dateOfBirth: string;
+  gender: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  enrollmentDate: string;
+  status: string;
+  centerId: number;
+  userId: number;
+}
+
 export interface BulkImportResult {
   totalRecords: number;
   successCount: number;
@@ -118,5 +153,10 @@ export class StudentService {
   // Get student results
   getStudentResults(studentId: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${studentId}/results`);
+  }
+
+  // Register student (second step after user registration)
+  registerStudent(studentData: StudentRegistrationRequest): Observable<StudentRegistrationResponse> {
+    return this.http.post<StudentRegistrationResponse>(`${this.apiUrl}`, studentData);
   }
 }

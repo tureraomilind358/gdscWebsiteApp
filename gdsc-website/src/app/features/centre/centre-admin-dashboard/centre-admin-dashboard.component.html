@@ -178,109 +178,108 @@
       </button>
     </div>
     <div class="modal-body">
-      <form (ngSubmit)="addStudent()">
-        <div class="form-row">
-          <div class="form-group">
-            <!-- <label for="firstName">First Name *</label> -->
-            <input type="text" id="firstName" placeholder="First Name" [(ngModel)]="newStudent.firstName"
-              name="firstName" required>
-          </div>
-          <div class="form-group">
-            <!-- <label for="lastName">Last Name *</label> -->
-            <input type="text" id="lastName" placeholder="Last Name" [(ngModel)]="newStudent.lastName" name="lastName"
-              required>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <!-- <label for="email">Email *</label> -->
-            <input type="email" id="email" placeholder="Email" [(ngModel)]="newStudent.email" name="email" required>
-          </div>
-          <div class="form-group">
-            <!-- <label for="phone">Phone *</label> -->
-            <input type="tel" id="phone" placeholder="Phone" [(ngModel)]="newStudent.phone" name="phone" required>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <!-- <label for="centerId">centerId *</label> -->
-            <input type="tel" id="centerId" placeholder="center Id" [(ngModel)]="newStudent.centerId" disabled
-              name="centerId" required>
-          </div>
-          <div class="form-group">
-            <select [(ngModel)]="newStudent.userId" name="userId" required>
-              <option selected disabled>Select Student</option>
-              <ng-container *ngFor="let user of studentList">
-                <option *ngIf="user.roles.includes('STUDENT')" [ngValue]="user.id">
-                  {{ user.firstName ? (user.firstName + ' ' + user.lastName) : user.username }}
-                </option>
-              </ng-container>
-            </select>
-          </div>
+    <form [formGroup]="newStudent" (ngSubmit)="addStudent()">
+  <div class="row">
+    <!-- ID (disabled, auto) -->
+    <div class="col-md-4 my-2">
+      <input type="number" id="id" placeholder="ID" class="form-control" formControlName="id" readonly>
+    </div>
 
+    <!-- Username -->
+    <div class="col-md-4 my-2">
+      <input type="text" id="username" placeholder="Username" class="form-control" formControlName="username">
+    </div>
 
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="dateOfBirth">Date of Birth *</label>
-            <input type="date" id="dateOfBirth" placeholder="Date of Birth" [(ngModel)]="newStudent.dateOfBirth"
-              name="dateOfBirth" required>
-          </div>
-          <div class="form-group">
-            <label for="gender">Gender *</label>
-            <select id="gender" [(ngModel)]="newStudent.gender" name="gender" required>
-              <option value="">Select Gender</option>
-              <option value="MALE">Male</option>
-              <option value="FEMALE">Female</option>
-              <option value="OTHER">Other</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <!-- <label for="address">Address *</label> -->
-            <input type="text" id="address" placeholder="Address" [(ngModel)]="newStudent.address" name="address"
-              required>
-          </div>
-          <div class="form-group">
-            <!-- <label for="city">City *</label> -->
-            <input type="text" id="city" placeholder="City" [(ngModel)]="newStudent.city" name="city" required>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <!-- <label for="state">State *</label> -->
-            <input type="text" id="state" placeholder="State" [(ngModel)]="newStudent.state" name="state" required>
-          </div>
-          <div class="form-group">
-            <!-- <label for="zipCode">Zip Code *</label> -->
-            <input type="text" id="zipCode" placeholder="Zip Code" [(ngModel)]="newStudent.zipCode" name="zipCode"
-              required>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="enrollmentDate">Enrollment Date *</label>
-            <input type="date" id="enrollmentDate" placeholder="Enrollment Date" [(ngModel)]="newStudent.enrollmentDate"
-              name="enrollmentDate" required>
-          </div>
-          <div class="form-group">
-            <label for="status">Status *</label>
-            <select id="status" placeholder="Status" [(ngModel)]="newStudent.status" name="status" required>
-              <option value="ACTIVE">Active</option>
-              <option value="INACTIVE">Inactive</option>
-              <option value="PENDING">Pending</option>
-            </select>
-          </div>
-        </div>
-        <div class="modal-actions">
-          <button type="button" class="btn btn-secondary" (click)="closeAddStudentModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">Add Student</button>
-        </div>
-      </form>
+    <!-- First & Last Name -->
+    <div class="col-md-4 my-2">
+      <input type="text" id="firstName" placeholder="First Name" class="form-control" formControlName="firstName">
+    </div>
+    <div class="col-md-4 my-2">
+      <input type="text" id="lastName" placeholder="Last Name" class="form-control" formControlName="lastName">
+    </div>
+
+    <!-- Email & Phone -->
+    <div class="col-md-4 my-2">
+      <input type="email" id="email" placeholder="Email" class="form-control" formControlName="email">
+    </div>
+    <div class="col-md-4 my-2">
+      <input type="tel" id="phone" placeholder="Phone" class="form-control" formControlName="phone">
+    </div>
+
+    <!-- Password & CenterId -->
+    <div class="col-md-4 my-2">
+      <input type="password" id="password" placeholder="Password" class="form-control" formControlName="password">
+    </div>
+    <div class="col-md-4 my-2">
+      <input type="text" id="centerId" placeholder="Center ID" class="form-control" formControlName="centerId" readonly>
+    </div>
+
+    <!-- Address & City -->
+    <div class="col-md-4 my-2">
+      <input type="text" id="address" placeholder="Address" class="form-control" formControlName="address">
+    </div>
+    <div class="col-md-4 my-2">
+      <input type="text" id="city" placeholder="City" class="form-control" formControlName="city">
+    </div>
+
+    <!-- State & Zip -->
+    <div class="col-md-4 my-2">
+      <input type="text" id="state" placeholder="State" class="form-control" formControlName="state">
+    </div>
+    <div class="col-md-4 my-2">
+      <input type="text" id="zipCode" placeholder="Zip Code" class="form-control" formControlName="zipCode">
+    </div>
+
+    <!-- Date of Birth & Gender -->
+    <div class="col-md-4 my-2">
+      <label for="dateOfBirth">Date of Birth *</label>
+      <input type="date" id="dateOfBirth" class="form-control" formControlName="dateOfBirth">
+    </div>
+    <div class="col-md-4 my-2">
+      <label for="gender">Gender *</label>
+      <select id="gender" class="form-control" formControlName="gender">
+        <option value="">Select Gender</option>
+        <option value="MALE">Male</option>
+        <option value="FEMALE">Female</option>
+        <option value="OTHER">Other</option>
+      </select>
+    </div>
+
+    <!-- Enrollment Date & Status -->
+    <div class="col-md-4 my-2">
+      <label for="enrollmentDate">Enrollment Date *</label>
+      <input type="date" id="enrollmentDate" class="form-control" formControlName="enrollmentDate">
+    </div>
+    <div class="col-md-4 my-2">
+      <label for="status">Status *</label>
+      <select id="status" class="form-control" formControlName="status">
+        <option value="ACTIVE">Active</option>
+        <option value="INACTIVE">Inactive</option>
+        <option value="PENDING">Pending</option>
+      </select>
+    </div>
+
+    <!-- Roles -->
+    <div class="col-md-4 my-2">
+      <label>Roles</label>
+      <select class="form-control" formControlName="roles">
+        <option value="STUDENT">Student</option>
+        <option value="TEACHER">Teacher</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="modal-actions mt-3">
+    <button type="button" class="btn btn-secondary" (click)="closeAddStudentModal()">Cancel</button>
+    <button type="submit" class="btn btn-primary" [disabled]="newStudent.invalid">Add Student</button>
+  </div>
+</form>
+
     </div>
   </div>
 </div>
+
 
 <!-- Bulk Import Modal -->
 <div class="modal-overlay" *ngIf="showBulkImportModal" (click)="closeBulkImportModal()"

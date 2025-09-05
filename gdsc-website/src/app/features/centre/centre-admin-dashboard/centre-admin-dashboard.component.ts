@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService, UserRole } from '../../../core/auth/auth.service';
-import { StudentService, Student, CreateStudentRequest } from '../../../core/services/student.service';
+import { StudentService, Student, CreateStudentRequest, StudentRegistrationRequest } from '../../../core/services/student.service';
 import { CourseService, Course } from '../../../core/services/course.service';
 import { CentreService } from '../../../core/services/centre.service';
-import { UserService } from 'src/app/core/services/user.services';
+import { UserService, UserRegistrationRequest } from 'src/app/core/services/user.services';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-centre-admin-dashboard',
@@ -41,22 +42,33 @@ export class CentreAdminDashboardComponent implements OnInit {
   selectedFile: File | null = null;
 
   // New student form
-  newStudent: any = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: 0,
-    dateOfBirth: '',
-    gender: '',
-    address: '',
-    city: '',
-    state: '',
-    zipCode: 0,
-    enrollmentDate: '',
-    status: 'active',
-    centerId: 0,
-    userId: 0
-  };
+newStudent:FormGroup = this.fb.group({
+      id: [0],
+      username: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      firstName: [''],
+      lastName: [''],
+      phone: [''],
+      isEnabled: [true],
+      password: [''],
+      isAccountNonExpired: [true],
+      isAccountNonLocked: [true],
+      isCredentialsNonExpired: [true],
+      roles: [],  
+      centerId: Number(this.centreId),
+
+      // Extra fields
+      dateOfBirth: [''],
+      gender: [''],
+      address: [''],
+      city: [''],
+      state: [''],
+      zipCode: [''],
+      enrollmentDate: [''],
+      status: [],
+      userId: []
+    });
+
 
   constructor(
     private authService: AuthService,
@@ -64,7 +76,8 @@ export class CentreAdminDashboardComponent implements OnInit {
     private courseService: CourseService,
     private centreService: CentreService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private fb: FormBuilder
   ) { }
 
   ngOnInit(): void {
@@ -72,7 +85,7 @@ export class CentreAdminDashboardComponent implements OnInit {
       this.router.navigate(['/unauthorized']);
       return;
     }
-
+    this.newStudent.value.centerId = this.centreId;
     this.userService.getUserByCenterId(this.centreId!).subscribe({
       next: (userData: any) => {
         this.studentList = userData.data;
@@ -198,37 +211,68 @@ export class CentreAdminDashboardComponent implements OnInit {
   }
 
   resetNewStudentForm(): void {
-    this.newStudent = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      dateOfBirth: '',
-      gender: '',
-      address: '',
-      city: '',
-      state: '',
-      zipCode: '',
-      enrollmentDate: '',
-      status: 'active',
-      centerId:this.centreId,
-      userId: 0
-    };
+    this.newStudent.reset()
   }
 
   addStudent(): void {
     if (!this.centreId) return;
     console.log('Adding student:', this.newStudent);
-    this.studentService.createStudent(this.newStudent).subscribe({
-      next: (student) => {
-        this.students.unshift(student);
-        this.loadStatistics();
-        this.closeAddStudentModal();
-        alert('Student added successfully!');
+
+    // Step 1: Register user first
+    const userRegistrationData: UserRegistrationRequest = {
+      username: this.newStudent.value.username,
+      email: this.newStudent.value.email,
+      firstName: this.newStudent.value.firstName,
+      lastName: this.newStudent.value.lastName,
+      phone: this.newStudent.value.phone,
+      isEnabled: this.newStudent.value.isEnabled,
+      password: this.newStudent.value.password,
+      isAccountNonExpired: this.newStudent.value.isAccountNonExpired,
+      isAccountNonLocked: this.newStudent.value.isAccountNonLocked,
+      isCredentialsNonExpired: this.newStudent.value.isCredentialsNonExpired,
+      roles: this.newStudent.value.roles,
+      centerId: Number(this.centreId)
+    };
+
+    this.userService.registerUser(userRegistrationData).subscribe({
+      next: (userResponse:any) => {
+        console.log('User registered successfully:', userResponse);
+        
+        // Step 2: Register student with the returned user ID
+        const studentRegistrationData: StudentRegistrationRequest = {
+          firstName: this.newStudent.value.firstName,
+          lastName: this.newStudent.value.lastName,
+          email: this.newStudent.value.email,
+          phone: this.newStudent.value.phone,
+          dateOfBirth: this.newStudent.value.dateOfBirth,
+          gender: this.newStudent.value.gender,
+          address: this.newStudent.value.address,
+          city: this.newStudent.value.city,
+          state: this.newStudent.value.state,
+          zipCode: this.newStudent.value.zipCode,
+          enrollmentDate: this.newStudent.value.enrollmentDate,
+          status: this.newStudent.value.status,
+          centerId: Number(this.centreId),
+          userId: userResponse.data.id
+        };
+
+        this.studentService.registerStudent(studentRegistrationData).subscribe({
+          next: (studentResponse) => {
+            console.log('Student registered successfully:', studentResponse);
+            this.loadStudents(); // Reload the student list
+            this.loadStatistics();
+            this.closeAddStudentModal();
+            alert('Student added successfully!');
+          },
+          error: (error) => {
+            console.error('Error registering student:', error);
+            alert('Error registering student. Please try again.');
+          }
+        });
       },
       error: (error) => {
-        console.error('Error adding student:', error);
-        alert('Error adding student. Please try again.');
+        console.error('Error registering user:', error);
+        alert('Error registering user. Please try again.');
       }
     });
   }
@@ -270,7 +314,15 @@ export class CentreAdminDashboardComponent implements OnInit {
 
   // Student Actions
   editStudent(student: Student): void {
-    this.router.navigate(['/centre-admin/students', student.id, 'edit']);
+    // this.router.navigate(['/centre-admin/students', student.id, 'edit']);
+    this.openAddStudentModal();
+    this.studentService.getStudentById(student.id).subscribe({
+      next:(response:any)=>{
+        console.log(response.data);
+        this.newStudent.patchValue(response.data)
+        
+      }
+    })
   }
 
   deleteStudent(student: Student): void {
